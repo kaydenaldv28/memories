@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alyn & Imi - Our Special Moments</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rose: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        },
+                        cream: '#FFFDF9',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        handwriting: ['"Caveat"', 'cursive'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff5f6 0%, #fde8eb 50%, #fbcfe8 100%);
+            min-height: 100vh;
+            color: #4a3b32;
+            overflow-x: hidden;
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: rgba(244, 63, 94, 0.25);
+            animation: moveHeart linear infinite;
+        }
+
+        @keyframes moveHeart {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .polaroid-card {
+            background: #ffffff;
+            padding: 12px 12px 20px 12px;
+            box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .polaroid-card:hover {
+            transform: translateY(-10px) rotate(0deg) scale(1.02) !important;
+            box-shadow: 0 20px 35px -10px rgba(225, 29, 72, 0.25), 0 12px 15px -8px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+        }
+
+        .tape {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 80px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(2px);
+            border-left: 2px dashed rgba(225, 29, 72, 0.2);
+            border-right: 2px dashed rgba(225, 29, 72, 0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 5;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fde8eb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 4px;
+        }
+    </style>
+
+    <script>
+        // Data Memos & Initial Placeholders
+        const memoriesData = [
+            {
+                caption: "lebaran alyn dirumah imi",
+                memo: "hihi inget gak ini waktu lebaran dirumah imi walau cuman sebentar karena imi harus kerja tapi kita berhasil nyerbu ketupat sama sambel goreng kentang hihi",
+                image: "2025_03_31_08_36_25_5273AA64-CD9E-42A2-A2CB-C335C2C60A5A.jpg"
+            },
+            {
+                caption: "GGP WITH U",
+                memo: "ini pas kita ke ggp karena katanya alyn mau liat nabila jaga udah lama ga ketemua terus kita nonton film juga sama pulang nya beli boost juice",
+                image: "2025_03_12_21_08_03_IMG_0583.jpg"
+            },
+            {
+                caption: "FM SQUADD",
+                memo: "ini kita libur berdua terus seharian nongkrong di fm tapi alyn ga pesen ubii karena gaada di fm yang ini",
+                image: "2025_01_03_00_02_57_3602C9D7-AB2D-4FF5-84CD-E736BE51F812.JPG"
+            },
+            {
+                caption: "INTERVIEW ALYN",
+                memo: "ini imi inget banget nunggu alyn interview buat masuk sociola kita nunggu seharian dan itu rame banget yang mau ngelamar terus pas break kita photobooth dulu deh",
+                image: "2024_06_26_11_56_49_99918FED-AA1D-46CC-899F-2E8D0CBF0A0A.jpg"
+            },
+            {
+                caption: "UPALA AGAIN",
+                memo: "ini kita di upala hehe, karena alyn bm mam pancake jadi kita kesini beli pancake dan ternyata rasanya enak",
+                image: "2024_05_05_21_54_40_IMG_0440.jpg"
+            },
+            {
+                caption: "JAVALAND",
+                memo: "ini waktu abis main di ggp siang siang kita juga sempet karaoke alyn beliin imi hoodie di H&M terus pulangnya mampir javaland karena ini termasuk temppat ngedate kita pertama kali",
+                image: "2024_04_04_16_18_15_AA131D51-6118-49FD-944F-58DBD101A61A.jpg"
+            },
+            {
+                caption: "OUR FIRST MET",
+                memo: "INI DIAAAA KITA PERTAMA KETEMU alyn imi ajak ke BNI city disitu alyn masih malu malu sampe alyn laper aja gamau ngomong sama masker dipake mulu dan disitu imi bener bener deg degan parah soalnya alyn cantik banget woyyyyy",
+                image: "2024_01_13_21_47_09_AEF5BA94-F2C7-489B-A68E-4B338B304E24.jpg"
+            },
+            {
+                caption: "PICT BEFORE DISASTER",
+                memo: "kalo yang ini di kopitagram jakbar wkwkwk inget banget abis foto terus kita main kartu eh kopi imi kesenggol tumpah terus karena gaada tisu di lap pake kartu joker \"IMIIII KOK BISAAAA\" gitu kata alyn pas kopinya tumpah",
+                image: "2024_01_10_19_48_54_B8421B02-41B2-461F-BE25-7D8DD52143C8.jpg"
+            },
+            {
+                caption: "SUNSET KOBAIN",
+                memo: "ini kita liat sunset di kobain coffe ada pengganggu si reyhan wkwkw tapi gapapa soalnya alyn seneng bisa liat view gedung jakarta dari atas sini",
+                image: "2023_12_14_18_22_52_03AA3FFC-40F6-4B31-93CF-3FFA7C83B66F.JPG"
+            },
+            {
+                caption: "WARJOO",
+                memo: "solusi kita saat tanggal tua belum gajian tapi mau nongkrong yaitu tempat ini WARJOOO hehe alyn selalu pesan tahu cabe garam sama extrajoss susu andalan terus kita suka nostalgia nongkrong di warmindo malang karena harganya sama sama murah",
+                image: "2023_12_08_23_41_58_0C6B3CA6-AC94-47E7-97A1-07038AB30683.JPG"
+            }
+        ];
+
+        // Fallback SVG generator for photos
+        function handleImgError(imgEl, index) {
+            imgEl.onerror = null;
+            const caption = memoriesData[index] ? memoriesData[index].caption : "Alyn & Imi";
+            
+            // Generate dynamic styled SVG placeholder
+            const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+                <defs>
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#fecdd3;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#fda4af;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grad)" />
+                <circle cx="300" cy="350" r="120" fill="white" opacity="0.3"/>
+                <text x="50%" y="360" font-family="sans-serif" font-size="80" fill="#e11d48" text-anchor="middle">📸</text>
+                <text x="50%" y="480" font-family="sans-serif" font-weight="bold" font-size="28" fill="#881337" text-anchor="middle">${caption}</text>
+                <text x="50%" y="530" font-family="sans-serif" font-size="20" fill="#9f1239" text-anchor="middle">Klik "Ganti Foto" untuk Pasang Foto</text>
+            </svg>`;
+            
+            imgEl.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgContent);
+        }
+    </script>
+</head>
+<body class="font-sans antialiased selection:bg-rose-200 selection:text-rose-900 relative">
+
+    <div id="heartsContainer" class="hearts-bg"></div>
+    <div id="youtube-player" class="hidden"></div>
+
+    <!-- Floating Music Toggle Switch -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="musicToggleBtn" onclick="toggleMusic()" class="group flex items-center gap-3 bg-white/90 hover:bg-white text-rose-600 px-4 py-3 rounded-full shadow-lg border border-rose-200 transition-all duration-300 hover:scale-105 backdrop-blur-md">
+            <div id="discIcon" class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-music text-sm"></i>
+            </div>
+            <div class="text-left pr-1 hidden sm:block">
+                <div class="text-xs font-semibold text-rose-900">Taylor Swift - Mine</div>
+                <div id="musicStatus" class="text-[10px] text-rose-500 font-medium">Klik untuk Putar 🎵</div>
+            </div>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-8 sm:py-14">
+
+        <!-- Header / Opening Message -->
+        <header class="text-center mb-16 animate-float">
+            <div class="inline-block px-4 py-1.5 bg-rose-100 text-rose-700 font-medium text-sm rounded-full mb-4 border border-rose-200 shadow-sm">
+                <i class="fa-solid fa-heart text-rose-500 mr-1.5 animate-pulse"></i> Memory Vault Alyn & Imi
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-serif font-bold text-rose-950 mb-6 tracking-tight">
+                Our Memories Together 💕
+            </h1>
+            
+            <div class="max-w-2xl mx-auto bg-white/85 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-rose-200 shadow-xl relative">
+                <div class="absolute -top-4 -left-4 text-3xl">✨</div>
+                <div class="absolute -bottom-4 -right-4 text-3xl">💖</div>
+                <p class="font-handwriting text-2xl sm:text-3xl text-rose-900 leading-relaxed">
+                    "haiii bybuu lihat ini beberapa momen kita pas main dulu loh imi gamau lupa dan semoga kamu juga ga kepengen lupa sama momen ini yaa"
+                </p>
+            </div>
+        </header>
+
+        <!-- Memory Photo Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 mb-20">
+
+            <!-- Loop / Grid Cards generated dynamically in script -->
+            <div id="cardsGrid" class="contents"></div>
+
+        </section>
+
+        <!-- Final Letter Section -->
+        <section class="max-w-3xl mx-auto my-16">
+            <div class="bg-gradient-to-br from-white via-rose-50 to-rose-100 p-8 sm:p-12 rounded-3xl shadow-2xl border-2 border-rose-200 relative overflow-hidden text-center">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-rose-300/30 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-300/30 rounded-full blur-2xl"></div>
+                
+                <div class="w-16 h-16 bg-rose-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-rose-300">
+                    <i class="fa-solid fa-heart text-2xl animate-bounce"></i>
+                </div>
+
+                <h2 class="text-2xl font-serif font-bold text-rose-950 mb-4">A Special Note For Alyn</h2>
+                
+                <p class="text-gray-800 font-sans text-lg sm:text-xl leading-relaxed italic mb-8 px-2 sm:px-6">
+                    "ga perduli gimana kita sekarang aku tetep akan sayang cinta dan akan selalu ada disini untuk kamu dan kamu gaperlu takut ada orang baru karena aku cuma akan tertuju sama kamu kali ini hehehe love you alyn"
+                </p>
+
+                <div class="inline-flex items-center gap-2 text-rose-600 font-semibold text-sm bg-white/80 px-5 py-2.5 rounded-full border border-rose-200 shadow-sm">
+                    <span>Forever & Always, Imi</span>
+                    <i class="fa-solid fa-sparkles text-rose-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-rose-400 text-sm py-6">
+            <p>Made with ❤️ by Imi for Alyn</p>
+        </footer>
+
+    </main>
+
+    <!-- Modal Popup for Memo -->
+    <div id="memoModal" class="fixed inset-0 z-50 bg-rose-950/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeMemoModal(event)">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-rose-200 transform scale-95 transition-transform duration-300 relative" onclick="event.stopPropagation()">
+            <button onclick="closeMemoModalForce()" class="absolute top-4 right-4 w-9 h-9 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-full flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="modalImageContainer" class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-rose-50 flex items-center justify-center">
+                <img id="modalImg" src="" alt="" class="w-full h-full object-cover">
+            </div>
+
+            <h3 id="modalTitle" class="font-bold text-2xl text-rose-950 mb-2 uppercase font-sans"></h3>
+            
+            <div class="bg-rose-50/80 p-4 rounded-2xl border border-rose-100 mb-6">
+                <p id="modalMemo" class="font-handwriting text-2xl text-rose-900 leading-relaxed"></p>
+            </div>
+
+            <button onclick="closeMemoModalForce()" class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-md shadow-rose-200 transition-all">
+                Tutup <i class="fa-solid fa-heart ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Script Implementation -->
+    <script>
+        const id = (e) => document.getElementById(e);
+
+        // Render Photo Cards
+        function renderCards() {
+            const grid = id('cardsGrid');
+            const rotations = ['sm:rotate-[-2deg]', 'sm:rotate-[2deg]', 'sm:rotate-[-1deg]', 'sm:rotate-[3deg]', 'sm:rotate-[-2deg]', 'sm:rotate-[1deg]', 'sm:rotate-[-3deg]', 'sm:rotate-[2deg]', 'sm:rotate-[-2deg]', 'sm:rotate-[1deg]'];
+            
+            let html = '';
+            memoriesData.forEach((item, index) => {
+                const rot = rotations[index % rotations.length];
+                const gridExtra = (index === 9) ? 'sm:col-span-2 lg:col-span-1 lg:col-start-2' : '';
+                
+                html += `
+                <div class="polaroid-card rounded-2xl ${rot} ${gridExtra} cursor-pointer group/card relative" onclick="openMemoModal(${index})">
+                    <div class="tape"></div>
+                    <div class="relative overflow-hidden rounded-xl aspect-[3/4] mb-3 bg-rose-100 flex items-center justify-center">
+                        <img id="img-${index}" src="${item.image}" onerror="handleImgError(this, ${index})" alt="${item.caption}" class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105">
+                        
+                        <div class="absolute inset-0 bg-rose-900/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
+                            <span class="bg-white/95 text-rose-700 px-4 py-2 rounded-full text-xs font-bold shadow-lg transform -translate-y-1 transition-transform group-hover/card:translate-y-0">
+                                <i class="fa-regular fa-envelope-open mr-1.5"></i> Baca Memo
+                            </span>
+                            <label onclick="event.stopPropagation()" class="bg-rose-500 hover:bg-rose-600 text-white px-3.5 py-2 rounded-full text-xs font-semibold shadow-md cursor-pointer transition-colors flex items-center gap-1.5">
+                                <i class="fa-solid fa-camera"></i> Ganti Foto
+                                <input type="file" accept="image/*" class="hidden" onchange="changeCardImage(event, ${index})">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-center px-1">
+                        <h3 class="font-bold text-rose-950 text-lg tracking-wide uppercase font-sans">${item.caption}</h3>
+                        <p class="font-handwriting text-rose-600 text-xl line-clamp-1 mt-0.5">"${item.memo.substring(0, 25)}..."</p>
+                    </div>
+                </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // Change image locally via file picker
+        function changeCardImage(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newSrc = e.target.result;
+                    id(`img-${index}`).src = newSrc;
+                    memoriesData[index].image = newSrc;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Floating Hearts Background Animation
+        function createHeartParticles() {
+            const container = id('heartsContainer');
+            const heartIcons = ['❤️', '💖', '💕', '💗', '🌸'];
+            
+            for(let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDuration = `${5 + Math.random() * 8}s`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                heart.style.fontSize = `${14 + Math.random() * 18}px`;
+                container.appendChild(heart);
+            }
+        }
+
+        // Modal Functions
+        function openMemoModal(index) {
+            const data = memoriesData[index];
+            if(!data) return;
+
+            id('modalImg').src = id(`img-${index}`).src;
+            id('modalTitle').innerText = data.caption;
+            id('modalMemo').innerText = `"${data.memo}"`;
+
+            const modal = id('memoModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.firstElementChild.classList.remove('scale-95');
+            modal.firstElementChild.classList.add('scale-100');
+
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 35,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+            }
+        }
+
+        function closeMemoModal(e) {
+            if (e.target === id('memoModal')) closeMemoModalForce();
+        }
+
+        function closeMemoModalForce() {
+            const modal = id('memoModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.firstElementChild.classList.remove('scale-100');
+            modal.firstElementChild.classList.add('scale-95');
+        }
+
+        // YouTube Audio Integration
+        let ytPlayer;
+        let isPlaying = false;
+
+        function loadYouTubeAPI() {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'oxNLRqMJMZk',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'oxNLRqMJMZk'
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        };
+
+        function onPlayerReady(event) {
+            console.log("YouTube Player Ready");
+        }
+
+        function toggleMusic() {
+            if(!ytPlayer || typeof ytPlayer.playVideo !== 'function') {
+                alert('Audio player sedang dimuat, coba sejenak lagi yaa!');
+                return;
+            }
+
+            const disc = id('discIcon');
+            const status = id('musicStatus');
+
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+                isPlaying = false;
+                disc.classList.remove('animate-spin-slow');
+                status.innerText = 'Klik untuk Putar 🎵';
+            } else {
+                ytPlayer.playVideo();
+                isPlaying = true;
+                disc.classList.add('animate-spin-slow');
+                status.innerText = 'Memutar Lagu... 💖';
+            }
+        }
+
+        // Initialization
+        window.onload = function() {
+            renderCards();
+            createHeartParticles();
+            loadYouTubeAPI();
+        };
+    </script>
+</body>
+</html>
